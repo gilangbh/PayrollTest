@@ -75,7 +75,14 @@ contract Payroll is PayrollInterface {
 
     function addEmployee(address accountAddress, address[] allowedTokens, uint256 initialYearlyUSDSalary){
         var employee = Employee(accountAddress,allowedTokens,initialYearlyUSDSalary);
-
         employees.push(employee);
+    }
+
+    function setEmployeeSalary(uint256 employeeId,uint256 yearlyUSDSalary){
+        employees[employeeId].initialYearlyUSDSalary = yearlyUSDSalary;
+    }
+
+    function removeEmployee(uint256 employeeId){
+        delete employees[employeeId];
     }
 }
