@@ -63,7 +63,7 @@ contract PayrollInterface {
 }
 
 
-contract Payroll is PayrollInterface {
+contract Payroll is PayrollInterface, Owned {
         
     struct Employee {
         address employeeAddress;
@@ -74,14 +74,28 @@ contract Payroll is PayrollInterface {
     mapping(address => uint) employeeIds;
 
     Employee[] employees;
+    Employee employee;
 
     modifier onlyEmployee() {
+        require(employeeIds[msg.sender] > 0);
+        _;
+    }
 
+    function Payroll() onlyOwner{
+        Employee initialEmployee = employee;
+        initialEmployee.employeeAddress = 0x0;
+        initialEmployee.allowedTokens.push(0x0);
+        initialEmployee.initialYearlyUSDSalary = 0;
+        employees.push(initialEmployee);
     }
 
     function addEmployee(address accountAddress, address[] allowedTokens, uint256 initialYearlyUSDSalary) onlyOwner{
-        var employee = Employee(accountAddress,allowedTokens,initialYearlyUSDSalary);
-        employees.push(employee);
+        Employee addedEmployee = employee;
+        addedEmployee.employeeAddress = accountAddress;
+        addedEmployee.allowedTokens = allowedTokens;
+        addedEmployee.initialYearlyUSDSalary = initialYearlyUSDSalary;
+
+        employees.push(addedEmployee);
         employeeIds[accountAddress] = employees.length;
     }
 
