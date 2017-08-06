@@ -1,0 +1,20 @@
+{
+    "abi": "[{\"constant\":false,\"inputs\":[{\"name\":\"employeeId\",\"type\":\"uint256\"},{\"name\":\"yearlyUSDSalary\",\"type\":\"uint256\"}],\"name\":\"setEmployeeSalary\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"scapeHatch\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"employeeId\",\"type\":\"uint256\"}],\"name\":\"removeEmployee\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"calculatePayrollBurnrate\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"calculatePayrollRunway\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"payday\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"accountAddress\",\"type\":\"address\"},{\"name\":\"allowedTokens\",\"type\":\"address[]\"},{\"name\":\"initialYearlyUSDSalary\",\"type\":\"uint256\"}],\"name\":\"addEmployee\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"addFunds\",\"outputs\":[],\"payable\":true,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"employeeId\",\"type\":\"uint256\"}],\"name\":\"getEmployee\",\"outputs\":[{\"name\":\"employee\",\"type\":\"address\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"token\",\"type\":\"address\"},{\"name\":\"usdExchangeRate\",\"type\":\"uint256\"}],\"name\":\"setExchangeRate\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getEmployeeCount\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"tokens\",\"type\":\"address[]\"},{\"name\":\"distribution\",\"type\":\"uint256[]\"}],\"name\":\"determineAllocation\",\"outputs\":[],\"payable\":false,\"type\":\"function\"}]",
+    "bytecode": "",
+    "functionHashes": {
+        "addEmployee(address,address[],uint256)": "68c84260",
+        "addFunds()": "a26759cb",
+        "calculatePayrollBurnrate()": "2560baeb",
+        "calculatePayrollRunway()": "6432e9e0",
+        "determineAllocation(address[],uint256[])": "fe2fdf0b",
+        "getEmployee(uint256)": "bca9a5c5",
+        "getEmployeeCount()": "c2a63e3b",
+        "payday()": "6881385b",
+        "removeEmployee(uint256)": "21ed0f64",
+        "scapeHatch()": "16e85b2e",
+        "setEmployeeSalary(uint256,uint256)": "0a0c75aa",
+        "setExchangeRate(address,uint256)": "bd5c5420"
+    },
+    "gasEstimates": {},
+    "runtimeBytecode": ""
+}
