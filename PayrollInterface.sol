@@ -62,12 +62,20 @@ contract PayrollInterface {
   function setExchangeRate(address token, uint256 usdExchangeRate); // uses decimals from token
 }
 
-contract Employee {
-    address employeeAddress;
-    address[] allowedTokens;
-    uint256 initialYearlyUSDSalary;
-}
 
 contract Payroll is PayrollInterface {
-    
+        
+    struct Employee {
+        address employeeAddress;
+        address[] allowedTokens;
+        uint256 initialYearlyUSDSalary;
+    }
+
+    Employee[] employees;
+
+    function addEmployee(address accountAddress, address[] allowedTokens, uint256 initialYearlyUSDSalary){
+        Employee employee = new Employee(accountAddress,allowedTokens,initialYearlyUSDSalary);
+
+        employees.push(employee);
+    }
 }
