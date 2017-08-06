@@ -71,18 +71,29 @@ contract Payroll is PayrollInterface {
         uint256 initialYearlyUSDSalary;
     }
 
+    mapping(address => uint) employeeIds;
+
     Employee[] employees;
 
-    function addEmployee(address accountAddress, address[] allowedTokens, uint256 initialYearlyUSDSalary){
-        var employee = Employee(accountAddress,allowedTokens,initialYearlyUSDSalary);
-        employees.push(employee);
+    modifier onlyEmployee() {
+
     }
 
-    function setEmployeeSalary(uint256 employeeId,uint256 yearlyUSDSalary){
+    function addEmployee(address accountAddress, address[] allowedTokens, uint256 initialYearlyUSDSalary) onlyOwner{
+        var employee = Employee(accountAddress,allowedTokens,initialYearlyUSDSalary);
+        employees.push(employee);
+        employeeIds[accountAddress] = employees.length;
+    }
+
+    function setEmployeeSalary(uint256 employeeId,uint256 yearlyUSDSalary) onlyOwner{
         employees[employeeId].initialYearlyUSDSalary = yearlyUSDSalary;
     }
 
-    function removeEmployee(uint256 employeeId){
+    function removeEmployee(uint256 employeeId) onlyOwner{
         delete employees[employeeId];
+    }
+
+    function addFunds() payable {
+
     }
 }
