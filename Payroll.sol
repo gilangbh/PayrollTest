@@ -36,6 +36,51 @@ contract Owned {
     }
 }
 
+/**
+ * Math operations with safety checks
+ */
+library SafeMath {
+  function mul(uint a, uint b) internal returns (uint) {
+    uint c = a * b;
+    assert(a == 0 || c / a == b);
+    return c;
+  }
+
+  function div(uint a, uint b) internal returns (uint) {
+    // assert(b > 0); // Solidity automatically throws when dividing by 0
+    uint c = a / b;
+    // assert(a == b * c + a % b); // There is no case in which this doesn't hold
+    return c;
+  }
+
+  function sub(uint a, uint b) internal returns (uint) {
+    assert(b <= a);
+    return a - b;
+  }
+
+  function add(uint a, uint b) internal returns (uint) {
+    uint c = a + b;
+    assert(c >= a);
+    return c;
+  }
+
+  function max64(uint64 a, uint64 b) internal constant returns (uint64) {
+    return a >= b ? a : b;
+  }
+
+  function min64(uint64 a, uint64 b) internal constant returns (uint64) {
+    return a < b ? a : b;
+  }
+
+  function max256(uint256 a, uint256 b) internal constant returns (uint256) {
+    return a >= b ? a : b;
+  }
+
+  function min256(uint256 a, uint256 b) internal constant returns (uint256) {
+    return a < b ? a : b;
+  }
+}
+
 // For the sake of simplicity lets asume USD is a ERC20 token
 // Also lets asume we can 100% trust the exchange rate oracle
 contract PayrollInterface {
@@ -62,18 +107,21 @@ contract PayrollInterface {
   function setExchangeRate(address token, uint256 usdExchangeRate); // uses decimals from token
 }
 
-
 contract Payroll is PayrollInterface, Owned {
-        
+    using SafeMath for uint256;
+
+    uint256 constant public totalMonthsInaYear = 12;
+
+    mapping(address => uint256) employeeIds;
+    uint256 employeeCount;
+    uint256 totalPayrollYearly;
+
     struct Employee {
         address employeeAddress;
         address[] allowedTokens;
         uint256 initialYearlyUSDSalary;
     }
 
-    mapping(address => uint256) employeeIds;
-    uint employeeCount;
-    uint totalPayroll;
 
     Employee[] employees;
     Employee employee;
@@ -90,6 +138,7 @@ contract Payroll is PayrollInterface, Owned {
         initialEmployee.initialYearlyUSDSalary = 0;
         employees.push(initialEmployee);
         employeeCount = 0;
+        totalPayrollYearly = 0;
     }
 
     function addEmployee(address accountAddress, address[] allowedTokens, uint256 initialYearlyUSDSalary) onlyOwner{
@@ -103,13 +152,18 @@ contract Payroll is PayrollInterface, Owned {
         employees.push(addedEmployee);
         employeeIds[accountAddress] = employees.length;
         employeeCount += 1;
+
+        totalPayrollYearly += initialYearlyUSDSalary;
     }
 
     function setEmployeeSalary(uint256 employeeId,uint256 yearlyUSDSalary) onlyOwner{
+        totalPayrollYearly -= employees[employeeId].initialYearlyUSDSalary;
+        totalPayrollYearly += yearlyUSDSalary;
         employees[employeeId].initialYearlyUSDSalary = yearlyUSDSalary;
     }
 
     function removeEmployee(uint256 employeeId) onlyOwner{
+        totalPayrollYearly -= employees[employeeId].initialYearlyUSDSalary;
         employeeIds[employees[employeeId].employeeAddress] = 0;
         delete employees[employeeId];
         
@@ -122,5 +176,27 @@ contract Payroll is PayrollInterface, Owned {
 
     function getEmployeeCount() constant returns (uint256){
         return employeeCount;
+    }
+
+    function getEmployee(uint employeeId) constant returns (address employee){
+        
+    }
+
+    function calculatePayrollBurnrate() constant returns (uint256){
+        uint256 monthlyPayrollBurnRate = SafeMath.div(totalPayrollYearly,totalMonthsInaYear);
+        return monthlyPayrollBurnRate;
+    }
+
+    function calculatePayrollRunway() constant returns (uint256){
+        uint256 monthlyPayrollBurnRate = calculatePayrollBurnrate();
+        uint256 totalMonthLeft = SafeMath.div(this.balance,monthlyPayrollBurnRate);
+    }
+
+    function determineAllocation(address[] tokens, uint256[] distribution) onlyEmployee{
+
+    }
+
+    function payday() onlyEmployee{
+
     }
 }
