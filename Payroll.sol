@@ -71,7 +71,9 @@ contract Payroll is PayrollInterface, Owned {
         uint256 initialYearlyUSDSalary;
     }
 
-    mapping(address => uint) employeeIds;
+    mapping(address => uint256) employeeIds;
+    uint employeeCount;
+    uint totalPayroll;
 
     Employee[] employees;
     Employee employee;
@@ -87,9 +89,12 @@ contract Payroll is PayrollInterface, Owned {
         initialEmployee.allowedTokens.push(0x0);
         initialEmployee.initialYearlyUSDSalary = 0;
         employees.push(initialEmployee);
+        employeeCount = 0;
     }
 
     function addEmployee(address accountAddress, address[] allowedTokens, uint256 initialYearlyUSDSalary) onlyOwner{
+        if(employeeIds[accountAddress] == 0) return;
+        if(employeeIds[accountAddress] > 0) return;
         Employee addedEmployee = employee;
         addedEmployee.employeeAddress = accountAddress;
         addedEmployee.allowedTokens = allowedTokens;
@@ -97,6 +102,7 @@ contract Payroll is PayrollInterface, Owned {
 
         employees.push(addedEmployee);
         employeeIds[accountAddress] = employees.length;
+        employeeCount += 1;
     }
 
     function setEmployeeSalary(uint256 employeeId,uint256 yearlyUSDSalary) onlyOwner{
@@ -104,10 +110,17 @@ contract Payroll is PayrollInterface, Owned {
     }
 
     function removeEmployee(uint256 employeeId) onlyOwner{
+        employeeIds[employees[employeeId].employeeAddress] = 0;
         delete employees[employeeId];
+        
+        employeeCount -= 1;
     }
 
     function addFunds() payable {
 
+    }
+
+    function getEmployeeCount() constant returns (uint256){
+        return employeeCount;
     }
 }
